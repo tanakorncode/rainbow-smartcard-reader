@@ -1,0 +1,75 @@
+{
+  "name": "smart-card-reader",
+  "version": "1.0.2",
+  "description": "โปรแกรมอ่านบัตรประชาชน ระบบคิวอัจฉริยะ",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "build": "electron-builder",
+    "postinstall": "electron-builder install-app-deps",
+    "server": "http-server dist -p 8080",
+    "rebuild": "./node_modules/.bin/electron-rebuild"
+  },
+  "repository": "https://github.com/tanakorncode/kubota-smartcard-reader.git",
+  "keywords": [
+    "Electron",
+    "MComScience",
+    "UDH Smart Card Reader"
+  ],
+  "author": "MComScience",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^13.2.3",
+    "electron-builder": "^22.11.7",
+    "electron-rebuild": "^1.11.0",
+    "electron-reloader": "^1.2.3"
+  },
+  "dependencies": {
+    "auto-launch": "^5.0.5",
+    "axios": "^0.21.1",
+    "crypto": "^1.0.1",
+    "datauri": "^4.1.0",
+    "dotenv": "^10.0.0",
+    "electron-log": "^4.2.1",
+    "electron-updater": "^4.3.1",
+    "legacy-encoding": "^3.0.0",
+    "menubar": "^9.0.2",
+    "node-rsa": "^1.1.1",
+    "pcsclite": "^1.0.0",
+    "socket.io-client": "^4.1.3",
+    "toastr": "^2.1.4",
+    "url": "^0.11.0",
+    "utf8-to-ansi": "^1.0.3",
+    "uuid": "^8.3.2"
+  },
+  "build": {
+    "productName": "Smart Card Reader",
+    "copyright": "Copyright © 2020 ${author}",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://spqueuing.com/software/smart-card-reader/releases"
+      }
+    ],
+    "appId": "com.kubota-smart-card-reader.app",
+    "win": {
+      "icon": "Thai-smart-card.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "nodeGypRebuild": false,
+    "extraResources": [
+      "./environment/**",
+      "./output/**"
+    ]
+  }
+}

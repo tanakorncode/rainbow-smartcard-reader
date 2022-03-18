@@ -1,0 +1,5 @@
+{
+  "dest": "dist/installers/",
+  "icon": "Thai-smart-card.ico",
+  "tags": ["Utility"]
+}

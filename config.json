@@ -1,0 +1,5 @@
+{
+  "SOCKET_URL": "http://localhost:3000",
+  "KIOSK_ID": "1",
+  "API_HOST": "http://yii2-queue-udon.local/api/v1/kiosk/kiosk-list"
+}

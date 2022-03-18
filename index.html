@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+  <!-- <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+  <title>Smart Card Reader</title>
+  <!-- css -->
+  <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./node_modules/toastr/build/toastr.min.css">
+  <link rel="stylesheet" href="./assets/css/style.min.css">
+</head>
+
+<body>
+  <div id="app">
+    <h2 class="title">โปรแกรมอ่านบัตรประชาชน</h2>
+    <p id="version" style="text-align: center;color: #fff;padding: 0;margin: 0;"></p>
+    <div class="device-connected" :class="[!deviceConnect ? 'text-danger' : 'text-success']">
+      {{ deviceConnect ? 'Device Connected !' : 'Device not Connecting !' }}
+    </div>
+    <!-- <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <select name="kiosk_id" id="kiosk_id" v-model.number="kiosk_id" class="form-control" @change="onChangeKiosk">
+          <option value="">เลือกรายการ</option>
+          <option v-for="kiosk in kiosk_list" :key="kiosk.kiosk_id" :value="kiosk.kiosk_id">
+            {{ kiosk.kiosk_name }}
+          </option>
+        </select>
+      </div>
+    </div> -->
+    <br />
+    <div class="smart-card-container">
+      <img src="./assets/images/thai-id-card.png" alt="image" class="image-id-card">
+      <span class="cid">
+        {{ getProfile('citizenId') | mask }}
+      </span>
+      <span class="fullname">
+        {{ getProfile('fullname') }}
+      </span>
+      <span class="name-en">
+        {{ getProfile('titleEN') }} {{ getProfile('firstNameEN') }}
+      </span>
+      <span class="lastname-en">
+        {{ getProfile('lastNameEN') }}
+      </span>
+      <span class="date-of-birth">
+        {{ getProfile('birthday') | birthdateFormat }}
+      </span>
+      <span class="address">
+        {{ getProfile('address') }}
+      </span>
+      <span id="issue_date" class="issue_date">
+        {{ getProfile('issue') | birthdateFormat }}
+      </span>
+      <span id="expire_date" class="expire_date">
+        {{ getProfile('expire') | birthdateFormat }}
+      </span>
+      <span id="issue_date_label" class="issue_date_label">
+        วันออกบัตร
+      </span>
+      <span id="expire_date_label" class="expire_date_label">
+        วันหมดอายุ
+      </span>
+      <span v-if="avatar" class="avatar">
+        <img :src="avatar" alt="">
+      </span>
+    </div>
+    <div v-show="loading" class="loader">Loading...</div>
+    <div v-show="loading" class="text-loading"><span>กรุณารอสักครู่...</span></div>
+    <div class="messages-container"></div>
+
+    <div class="form-group row" style="padding-left: 20%;padding-right: 10%;">
+      <div class="col-sm-12">
+        <label class="text-white" style="color:#ffffff">Socket URL</label>
+        <input v-model="socketURL" id="socket-host" type="text" class="form-control" placeholder="http://localhost:3000">
+      </div>
+      <!--  <div class="col-sm-4">
+        <button id="select-folder" type="button" class="btn btn-default" style="margin-top: 15%;">Select Folder</button>
+      </div> -->
+    </div>
+    <div class="form-group row" style="padding-left: 20%;padding-right: 10%;">
+      <div class="col-sm-12">
+        <label class="text-white" style="color:#ffffff">Socket Path</label>
+        <input v-model="socketPath" id="socket-path" type="text" class="form-control" placeholder="/socket.io">
+      </div>
+    </div>
+    <div class="form-group row" style="padding-left: 20%;padding-right: 10%;">
+      <div class="col-sm-4">
+        <button @click="onSaveSetting()" id="btn-save" type="button" class="btn btn-default">บันทึก</button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- You can also require other files to run in this process -->
+  <script src="./assets/js/moment-with-locales.min.js"></script>
+  <!-- <script src="./node_modules/socket.io-client/dist/socket.io.js"></script> -->
+  <!-- <script src="./assets/js/axios.min.js"></script> -->
+  <script src="./assets/js/vue.js"></script>
+  <!-- <script src="./assets/js/app.js"></script> -->
+  <script src="./renderer.js"></script>
+</body>
+
+</html>

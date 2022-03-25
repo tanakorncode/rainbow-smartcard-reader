@@ -14,6 +14,8 @@ const { v4: uuidv4 } = require("uuid");
 const NodeRSA = require("node-rsa");
 const key = new NodeRSA({ b: 512 });
 let lastMsgId = 0;
+const { SerialPort } = require("serialport");
+const { ReadlineParser } = require("@serialport/parser-readline");
 
 // console.log("\nPUBLIC:");
 // console.log(key.exportKey("pkcs8-public-pem"));
@@ -72,6 +74,9 @@ ipcRenderer.on("message", (event, data) => {
 ipcRenderer.on("save-path", (event, data) => {
   document.getElementById("save-path").value = data;
 });
+ipcRenderer.on("DRIVING_READ_COMPLETE", (event, data) => {
+  app.sendSocketData("DRIVING_READ_COMPLETE", data);
+});
 
 function showMessage(message, hide = true, replaceAll = false) {
   const msgId = lastMsgId++ + 1;
@@ -96,6 +101,8 @@ var app = new Vue({
     socketPath: "/socket.io",
     socket: null,
     clientIP: "0.0.0.0",
+    serialPortPath: "",
+    sport: null,
   },
   computed: {
     avatar: function () {
@@ -110,6 +117,9 @@ var app = new Vue({
     if (window.localStorage.getItem("socketPath")) {
       this.socketPath = window.localStorage.getItem("socketPath");
     }
+    if (window.localStorage.getItem("serial-port-path")) {
+      this.serialPortPath = window.localStorage.getItem("serial-port-path");
+    }
   },
   watch: {
     socketURL: function (newVal, oldVal) {
@@ -118,13 +128,26 @@ var app = new Vue({
     socketPath: function (newVal, oldVal) {
       window.localStorage.setItem("socketPath", newVal);
     },
+    serialPortPath: function (newVal, oldVal) {
+      window.localStorage.setItem("serial-port-path", newVal);
+    },
   },
   mounted() {
     this.$nextTick(function () {
       this.getClientIP();
+      this.initSerialPort();
     });
   },
   methods: {
+    initSerialPort() {
+      if (this.serialPortPath) {
+        this.sport = new SerialPort({
+          path: this.serialPortPath,
+          baudRate: 9600,
+        });
+        this.handelSerialPort()
+      }
+    },
     getProfile: function (attr, defaultValue = "") {
       if (!this.profile) return defaultValue;
       return this.profile[attr] || defaultValue;
@@ -187,6 +210,35 @@ var app = new Vue({
     sendSocketData: function (event, data = null) {
       if (!this.socket) return;
       this.socket.emit(event, { data: data, ipAddress: this.clientIP });
+    },
+    onChangeSelectPort(e) {
+      const path = e.target.value;
+      if (path) {
+        if(this.sport) {
+          this.sport.close();
+        }
+        this.initSerialPort();
+      }
+    },
+    handelSerialPort() {
+      if (!this.sport) return;
+      const sport = this.sport;
+      const parser = sport.pipe(new ReadlineParser({ delimiter: "\r\n" }));
+      parser.on("data", function (data) {
+        console.log(data);
+        data = data.replace(/ /g, "");
+        const name = data
+          .substring(data.indexOf("^"), data.indexOf("."))
+          .substring(data.indexOf("^"))
+          .split("$")
+          .reverse()
+          .join(" ");
+        const cid = data.substring(data.indexOf("?"), data.indexOf("=")).replace(/\D/g, "").substring(6);
+        app.sendSocketData("DRIVING_READ_COMPLETE", {
+          name,
+          cid,
+        });
+      });
     },
   },
   filters: {
@@ -291,3 +343,49 @@ function onDeviceDisConnected(event, data) {
 //   console.log("DOMContentLoaded");
 //   app.initSocket();
 // });
+
+async function listSerialPorts() {
+  await SerialPort.list().then((ports, err) => {
+    if (err) {
+      toastr.error(err.message, `listSerialPorts`, {
+        timeOut: 3000,
+        closeButton: true,
+        progressBar: true,
+      });
+      return;
+    }
+    console.log("ports", ports);
+
+    // if (ports.length === 0) {
+    //   document.getElementById('error').textContent = 'No ports discovered'
+    // }
+    var selectport = document.getElementById("selectport");
+    for (let i = 0; i < ports.length; i++) {
+      const element = ports[i];
+      var option = document.createElement("option");
+      option.value = element.path;
+      if (element.manufacturer) {
+        option.text = element.path + " (" + element.manufacturer + ")";
+      } else {
+        option.text = element.path;
+      }
+
+      selectport.add(option);
+
+      if(element.path === app.serialPortPath) {
+        option.setAttribute('selected', true);
+      }
+    }
+  });
+}
+
+function listPorts() {
+  listSerialPorts();
+  setTimeout(listPorts, 2000);
+}
+
+// Set a timeout that will check for new serialPorts every 2 seconds.
+// This timeout reschedules itself.
+// setTimeout(listPorts, 2000);
+
+listSerialPorts();

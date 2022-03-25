@@ -176,8 +176,6 @@ app.allowRendererProcessReuse = false;
 //   },
 // });
 
-
-
 // mainWindow.loadURL(
 //   url.format({
 //     pathname: path.join(__dirname, "index.html"),
@@ -185,8 +183,6 @@ app.allowRendererProcessReuse = false;
 //     slashes: true,
 //   })
 // );
-
-
 
 // mb.on("ready", () => {
 //   const mainWindow = mb.window
@@ -201,5 +197,5 @@ app.allowRendererProcessReuse = false;
 //   console.log("Menubar app is ready.");
 // });
 try {
-  require('electron-reloader')(module)
+  require("electron-reloader")(module);
 } catch (_) {}

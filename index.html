@@ -87,6 +87,14 @@
       </div>
     </div>
     <div class="form-group row" style="padding-left: 20%;padding-right: 10%;">
+      <div class="col-sm-12">
+        <label class="text-white" style="color:#ffffff">Serial Ports</label>
+        <select v-model="serialPortPath" @change="onChangeSelectPort" name="selectport" id="selectport" class="form-control">
+            <option value="">--- เลือก ---</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row" style="padding-left: 20%;padding-right: 10%;">
       <div class="col-sm-4">
         <button @click="onSaveSetting()" id="btn-save" type="button" class="btn btn-default">บันทึก</button>
       </div>

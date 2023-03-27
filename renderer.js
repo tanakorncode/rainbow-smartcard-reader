@@ -16,6 +16,30 @@ const key = new NodeRSA({ b: 512 });
 let lastMsgId = 0;
 const { SerialPort } = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
+const _ = require("lodash")
+
+axios.defaults.baseURL = "https://rainbow-clinic.andamandev.com";
+// Add a request interceptor
+axios.interceptors.request.use(
+  function (config) {
+    // Do something before request is sent
+    return config;
+  },
+  function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  }
+);
+
+// Add a response interceptor
+axios.interceptors.response.use(
+  function (response) {
+    return _.get(response, "data.data", response);
+  },
+  function (error) {
+    return Promise.reject(_.get(error, "response.data.data", _.get(error, "response", error)));
+  }
+);
 
 // console.log("\nPUBLIC:");
 // console.log(key.exportKey("pkcs8-public-pem"));
@@ -195,9 +219,9 @@ var app = new Vue({
     },
     getClientIP: async function () {
       try {
-        axios.defaults.baseURL = "http://sysvms.syssteel.localhost";
-        const { data: ip } = await axios.get("/api/v1/kiosk/client-ip");
-        this.clientIP = ip;
+        const data = await axios.get("/api/v1/kiosk/client-ip");
+        console.log(data);
+        this.clientIP = data;
         this.initSocket();
       } catch (error) {
         toastr.error(error.message, `Get Client IP error.`, {
@@ -214,7 +238,7 @@ var app = new Vue({
     onChangeSelectPort(e) {
       const path = e.target.value;
       if (path) {
-        if(this.sport) {
+        if (this.sport) {
           this.sport.close();
         }
         this.initSerialPort();
@@ -372,7 +396,7 @@ async function listSerialPorts() {
 
       selectport.add(option);
 
-      if(element.path === app.serialPortPath) {
+      if (element.path === app.serialPortPath) {
         option.setAttribute('selected', true);
       }
     }
@@ -388,4 +412,4 @@ function listPorts() {
 // This timeout reschedules itself.
 // setTimeout(listPorts, 2000);
 
-listSerialPorts();
+// listSerialPorts();

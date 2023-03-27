@@ -1,6 +1,6 @@
 {
   "name": "smart-card-reader",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "โปรแกรมอ่านบัตรประชาชน ระบบคิวอัจฉริยะ",
   "main": "main.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "electron": "^17.2.0",
+    "electron": "^13.6.9",
     "electron-builder": "^23.0.2",
     "electron-rebuild": "^3.2.7",
     "electron-reloader": "^1.2.3"
@@ -36,6 +36,7 @@
     "electron-log": "^4.2.1",
     "electron-updater": "^4.3.1",
     "legacy-encoding": "^3.0.0",
+    "lodash": "^4.17.21",
     "menubar": "^9.0.2",
     "node-rsa": "^1.1.1",
     "pcsclite": "^1.0.0",
@@ -52,10 +53,10 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "https://sysvms.syssteel.com/software/smart-card-reader/releases"
+        "url": "https://rainbow-clinic.andamandev.com/software/smart-card-reader/releases"
       }
     ],
-    "appId": "com.kubota-smart-card-reader.app",
+    "appId": "com.rainbow-smart-card-reader.app",
     "dmg": {
       "contents": [
         {

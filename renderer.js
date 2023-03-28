@@ -14,9 +14,9 @@ const { v4: uuidv4 } = require("uuid");
 const NodeRSA = require("node-rsa");
 const key = new NodeRSA({ b: 512 });
 let lastMsgId = 0;
-const { SerialPort } = require("serialport");
+/*  */ const { SerialPort } = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
-const _ = require("lodash")
+const _ = require("lodash");
 
 axios.defaults.baseURL = "https://rainbow-clinic.andamandev.com";
 // Add a request interceptor
@@ -159,7 +159,7 @@ var app = new Vue({
   mounted() {
     this.$nextTick(function () {
       this.getClientIP();
-      this.initSerialPort();
+      // this.initSerialPort();
     });
   },
   methods: {
@@ -169,7 +169,7 @@ var app = new Vue({
           path: this.serialPortPath,
           baudRate: 9600,
         });
-        this.handelSerialPort()
+        this.handelSerialPort();
       }
     },
     getProfile: function (attr, defaultValue = "") {
@@ -397,7 +397,7 @@ async function listSerialPorts() {
       selectport.add(option);
 
       if (element.path === app.serialPortPath) {
-        option.setAttribute('selected', true);
+        option.setAttribute("selected", true);
       }
     }
   });

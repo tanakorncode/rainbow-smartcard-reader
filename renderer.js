@@ -14,8 +14,8 @@ const { v4: uuidv4 } = require("uuid");
 const NodeRSA = require("node-rsa");
 const key = new NodeRSA({ b: 512 });
 let lastMsgId = 0;
-/*  */ const { SerialPort } = require("serialport");
-const { ReadlineParser } = require("@serialport/parser-readline");
+// const { SerialPort } = require("serialport");
+// const { ReadlineParser } = require("@serialport/parser-readline");
 const _ = require("lodash");
 
 axios.defaults.baseURL = "https://rainbow-clinic.andamandev.com";

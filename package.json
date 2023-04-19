@@ -6,12 +6,12 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "build": "electron-builder --win",
+    "build": "electron-builder --mac --win -p always",
     "postinstall": "electron-builder install-app-deps",
     "server": "http-server dist -p 8080",
     "rebuild": "./node_modules/.bin/electron-rebuild"
   },
-  "repository": "https://github.com/tanakorncode/sys-smartcard-reader.git",
+  "repository": "https://github.com/tanakorncode/rainbow-smartcard-reader.git",
   "keywords": [
     "Electron",
     "MComScience",
@@ -53,6 +53,13 @@
       {
         "provider": "generic",
         "url": "https://rainbow-clinic.andamandev.com/storage/source/smart-card-reader/releases"
+      },
+      {
+        "provider": "github",
+        "repo": "rainbow-smartcard-reader",
+        "owner": "tanakorncode",
+        "token": "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",
+        "private": true
       }
     ],
     "appId": "com.rainbow-smart-card-reader.app",
